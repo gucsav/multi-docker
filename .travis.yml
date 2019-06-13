@@ -1,9 +1,9 @@
 sudo: required
 services:
-  -docker
+  - docker
 
 before_install:
-  -docker build -t gucsav/react_test -f ./client/Dockerfile.dev ./client
+  - docker build -t gucsav/react_test -f ./client/Dockerfile.dev ./client
 
 script:
   - docker run gucsav/react_test npm test -- --coverage
@@ -20,4 +20,4 @@ after_success:
   - docker push gucsav/multi-client
   - docker push gucsav/multi-nginx
   - docker push gucsav/multi-server
-  - docker push gucsav/multi-worker 
+  - docker push gucsav/multi-worker
