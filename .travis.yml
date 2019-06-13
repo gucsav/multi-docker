@@ -1,0 +1,23 @@
+sudo: required
+services:
+  -docker
+
+before_install:
+  -docker build -t gucsav/react_test -f ./client/Dockerfile.dev ./client
+
+script:
+  - docker run gucsav/react_test npm test -- --coverage
+
+after_success:
+  - docker build -t gucsav/multi-client ./client
+  - docker build -t gucsav/multi-nginx  ./nginx
+  - docker build -t gucsav/multi-server ./server
+  - docker build -t gucsav/multi-worker ./worker
+  # Login to the docker CLI
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+
+  # Take those images and push them to docker hub
+  - docker push gucsav/multi-client
+  - docker push gucsav/multi-nginx
+  - docker push gucsav/multi-server
+  - docker push gucsav/multi-worker 
